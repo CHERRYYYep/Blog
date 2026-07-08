@@ -39,7 +39,12 @@ const hasBannerLink = !!siteConfig.banner.credit.url;
 const mainPanelTop = siteConfig.banner.enable
 	? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
 	: "5.5rem";
----
+const bannerSources = Array.isArray(siteConfig.banner.src)
+	? siteConfig.banner.src
+	: [siteConfig.banner.src];
+const hasMultipleBannerImages = bannerSources.length > 1;
+const bannerControlTop = `${BANNER_HEIGHT_EXTEND + BANNER_HEIGHT / 2}vh`;
+	---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle}>
 
@@ -53,11 +58,29 @@ const mainPanelTop = siteConfig.banner.enable
 
 <!-- Banner -->
 {siteConfig.banner.enable && <div id="banner-wrapper" class={`absolute z-10 w-full transition duration-700 overflow-hidden`} style={`top: -${BANNER_HEIGHT_EXTEND}vh`}>
-    <ImageWrapper id="banner" alt="Banner image of the blog" class:list={["object-cover h-full transition duration-700 opacity-0 scale-105"]}
-                  src={siteConfig.banner.src} position={siteConfig.banner.position}
-    >
-    </ImageWrapper>
-</div>}
+	    <div id="banner" class="relative h-full transition duration-700 opacity-0 scale-105">
+	        {bannerSources.map((src, index) => (
+	            <ImageWrapper
+	                    alt="Banner image of the blog"
+	                    class:list={[
+	                        "banner-slide object-cover h-full transition-opacity duration-700 absolute inset-0",
+	                        {"opacity-100 z-10": index === 0, "opacity-0 z-0 pointer-events-none": index !== 0},
+	                    ]}
+	                    src={src}
+	                    position={siteConfig.banner.position}
+	            >
+	            </ImageWrapper>
+	        ))}
+	    </div>
+	    {hasMultipleBannerImages && <div id="banner-controls" class="pointer-events-none absolute left-0 right-0 z-40" style={`top: ${bannerControlTop}`}>
+	        <button type="button" id="banner-prev" aria-label="Previous banner image" class="pointer-events-auto absolute left-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-lg bg-black/45 text-white transition hover:bg-black/60 active:scale-90">
+	            <Icon name="material-symbols:chevron-left-rounded" class="text-[1.5rem]" />
+	        </button>
+	        <button type="button" id="banner-next" aria-label="Next banner image" class="pointer-events-auto absolute right-4 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-lg bg-black/45 text-white transition hover:bg-black/60 active:scale-90">
+	            <Icon name="material-symbols:chevron-right-rounded" class="text-[1.5rem]" />
+	        </button>
+	    </div>}
+	</div>}
 
 <!-- Main content -->
 <div class="absolute w-full z-30 pointer-events-none" style={`top: ${mainPanelTop}`}>

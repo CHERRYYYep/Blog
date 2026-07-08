@@ -17,7 +17,10 @@ export const siteConfig: SiteConfig = {
 	},
 	banner: {
 		enable: true,
-		src: "assets/images/raze.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+		src: [
+			"assets/images/a.png",
+			"assets/images/raze.png",
+		], // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
 			enable: false, // Display the credit text of the banner image 图片标签
@@ -60,8 +63,8 @@ export const profileConfig: ProfileConfig = {
 		//{
 		//	name: "Twitter",
 		//	icon: "fa6-brands:twitter", // Visit https://icones.js.org/ for icon codes
-			// You will need to install the corresponding icon set if it's not already included
-			// `pnpm add @iconify-json/<icon-set-name>`
+		// You will need to install the corresponding icon set if it's not already included
+		// `pnpm add @iconify-json/<icon-set-name>`
 		//	url: "https://twitter.com",
 		//},
 		{
@@ -78,7 +81,7 @@ export const profileConfig: ProfileConfig = {
 };
 
 export const licenseConfig: LicenseConfig = {
-	enable: true,
+	enable: false,
 	name: "CC BY-NC-SA 4.0",
 	url: "https://creativecommons.org/licenses/by-nc-sa/4.0/",
 };
