@@ -4,6 +4,9 @@
     .card-base {
         @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition;
     }
+    .post-glass-card {
+        @apply border border-white/25 bg-white/65 shadow-2xl shadow-black/10 backdrop-blur-2xl dark:border-white/10 dark:bg-[rgba(20,24,32,0.72)] dark:shadow-black/30;
+    }
     h1, h2, h3, h4, h5, h6, p, a, span, li, ul, ol, blockquote, code, pre, table, th, td, strong {
         @apply transition;
     }

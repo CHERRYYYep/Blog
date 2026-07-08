@@ -49,6 +49,9 @@ if (!banner || typeof banner !== "string" || banner.trim() === "") {
 banner = defaultBannerSrc;
 
 const enableBanner = siteConfig.banner.enable;
+const isFullBanner = siteConfig.banner.position === "full";
+const bannerHeight = isFullBanner ? 70 : BANNER_HEIGHT;
+const bannerHeightHome = isFullBanner ? 100 : BANNER_HEIGHT_HOME;
 
 let pageTitle: string;
 if (title) {
@@ -70,6 +73,7 @@ const bannerOffsetByPosition = {
 	top: `${BANNER_HEIGHT_EXTEND}vh`,
 	center: `${BANNER_HEIGHT_EXTEND / 2}vh`,
 	bottom: "0",
+	full: `${BANNER_HEIGHT_EXTEND / 2}vh`,
 };
 const bannerOffset =
 	bannerOffsetByPosition[siteConfig.banner.position || "center"];
@@ -164,31 +168,25 @@ const bannerOffset =
 
 <style is:global define:vars={{
 	bannerOffset,
-	'banner-height-home': `${BANNER_HEIGHT_HOME}vh`,
-	'banner-height': `${BANNER_HEIGHT}vh`,
+	'banner-height-home': `${bannerHeightHome}vh`,
+	'banner-height': `${bannerHeight}vh`,
 }}>
 @tailwind components;
 @layer components {
-	.enable-banner.is-home #banner-wrapper {
+	.enable-banner #banner-wrapper {
 		@apply h-[var(--banner-height-home)] translate-y-[var(--banner-height-extend)]
 	}
-	.enable-banner #banner-wrapper {
-		@apply h-[var(--banner-height-home)]
-	}
 
-	.enable-banner.is-home #banner {
+	.enable-banner #banner {
 		@apply h-[var(--banner-height-home)] translate-y-0
 	}
-	.enable-banner #banner {
-		@apply h-[var(--banner-height-home)] translate-y-[var(--bannerOffset)]
-	}
-	.enable-banner.is-home #main-grid {
+	.enable-banner #main-grid {
 		@apply translate-y-[var(--banner-height-extend)];
 	}
 	.enable-banner #top-row {
 		@apply h-[calc(var(--banner-height-home)_-_4.5rem)] transition-all duration-300
 	}
-	.enable-banner.is-home #sidebar-sticky {
+	.enable-banner #sidebar-sticky {
 		@apply top-[calc(1rem_-_var(--banner-height-extend))]
 	}
 	.navbar-hidden {
@@ -221,6 +219,7 @@ import {
 	BANNER_HEIGHT_EXTEND,
 } from "../constants/constants";
 import { siteConfig } from '../config';
+const effectiveBannerHeight = siteConfig.banner.position === 'full' ? 70 : BANNER_HEIGHT;
 
 /* Preload fonts */
 // (async function() {
@@ -577,7 +576,7 @@ if (window?.swup?.hooks) {
 let backToTopBtn = document.getElementById('back-to-top-btn');
 let toc = document.getElementById('toc-wrapper');
 function scrollFunction() {
-	let bannerHeight = window.innerHeight * (BANNER_HEIGHT / 100)
+	let bannerHeight = window.innerHeight * (effectiveBannerHeight / 100)
 
 	if (backToTopBtn) {
 		if (document.body.scrollTop > bannerHeight || document.documentElement.scrollTop > bannerHeight) {

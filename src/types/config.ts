@@ -1,5 +1,14 @@
 import type { AUTO_MODE, DARK_MODE, LIGHT_MODE } from "@constants/constants";
 
+export type MusicTrack =
+	| string
+	| {
+			title?: string;
+			artist?: string;
+			cover?: string;
+			src: string;
+	  };
+
 export type SiteConfig = {
 	title: string;
 	subtitle: string;
@@ -23,7 +32,7 @@ export type SiteConfig = {
 	banner: {
 		enable: boolean;
 		src: string | string[];
-		position?: "top" | "center" | "bottom";
+		position?: "top" | "center" | "bottom" | "full";
 		credit: {
 			enable: boolean;
 			text: string;
@@ -33,6 +42,16 @@ export type SiteConfig = {
 	toc: {
 		enable: boolean;
 		depth: 1 | 2 | 3;
+	};
+	post?: {
+		glassmorphism?: boolean;
+	};
+	music: {
+		enable: boolean;
+		autoplay?: boolean;
+		volume?: number;
+		src?: string | string[];
+		tracks?: MusicTrack[];
 	};
 
 	favicon: Favicon[];

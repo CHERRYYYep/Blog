@@ -1,6 +1,7 @@
 ---
 import BackToTop from "@components/control/BackToTop.astro";
 import Footer from "@components/Footer.astro";
+import MusicPlayer from "@components/MusicPlayer.svelte";
 import Navbar from "@components/Navbar.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
@@ -35,22 +36,97 @@ const {
 const hasBannerCredit =
 	siteConfig.banner.enable && siteConfig.banner.credit.enable;
 const hasBannerLink = !!siteConfig.banner.credit.url;
+const isFullBanner = siteConfig.banner.position === "full";
+const bannerHeight = isFullBanner ? 70 : BANNER_HEIGHT;
+const mainPanelBannerAnchor = isFullBanner ? 42 : bannerHeight;
 
 const mainPanelTop = siteConfig.banner.enable
-	? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
+	? `calc(${mainPanelBannerAnchor}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
 	: "5.5rem";
 const bannerSources = Array.isArray(siteConfig.banner.src)
 	? siteConfig.banner.src
 	: [siteConfig.banner.src];
 const hasMultipleBannerImages = bannerSources.length > 1;
-const bannerControlTop = `${BANNER_HEIGHT_EXTEND + BANNER_HEIGHT / 2}vh`;
+const bannerControlTop = `${(bannerHeight + BANNER_HEIGHT_EXTEND) / 2}vh`;
+const getNeteaseMusicId = (src: string) => {
+	const trimmed = src.trim();
+	try {
+		const musicUrl = new URL(trimmed);
+		const isNeteaseMusic =
+			musicUrl.hostname === "music.163.com" ||
+			musicUrl.hostname.endsWith(".music.163.com");
+		if (!isNeteaseMusic) return "";
+
+		const searchId = musicUrl.searchParams.get("id");
+		const hashQuery = musicUrl.hash.includes("?")
+			? musicUrl.hash.slice(musicUrl.hash.indexOf("?") + 1)
+			: "";
+		const hashId = hashQuery
+			? new URLSearchParams(hashQuery).get("id")
+			: null;
+		const id = searchId || hashId;
+		return id || "";
+	} catch {
+		return "";
+	}
+};
+const resolveMusicSource = (src: string) => {
+	const trimmed = src.trim();
+	const neteaseId = getNeteaseMusicId(trimmed);
+	if (neteaseId) {
+		return `https://music.163.com/song/media/outer/url?id=${neteaseId}.mp3`;
+	}
+	return trimmed;
+};
+const normalizeMusicTrack = (
+	track:
+		| string
+		| {
+				title?: string;
+				artist?: string;
+				cover?: string;
+				src: string;
+		  },
+	index: number,
+) => {
+	if (typeof track === "string") {
+		return {
+			title: `Track ${index + 1}`,
+			src: resolveMusicSource(track),
+			neteaseId: getNeteaseMusicId(track),
+		};
+	}
+	return {
+		title: track.title || `Track ${index + 1}`,
+		artist: track.artist,
+		cover: track.cover,
+		src: resolveMusicSource(track.src),
+		neteaseId: getNeteaseMusicId(track.src),
+	};
+};
+const musicSources = siteConfig.music.src
+	? Array.isArray(siteConfig.music.src)
+		? siteConfig.music.src
+		: [siteConfig.music.src]
+	: [];
+const musicTracks = [...musicSources, ...(siteConfig.music.tracks || [])]
+	.filter((track) => (typeof track === "string" ? track.trim() : track.src.trim()))
+	.map(normalizeMusicTrack);
 	---
 
 <Layout title={title} banner={banner} description={description} lang={lang} setOGTypeArticle={setOGTypeArticle}>
 
-<!-- Navbar -->
-<slot slot="head" name="head"></slot>
-<div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
+	<!-- Navbar -->
+	<slot slot="head" name="head"></slot>
+	{siteConfig.music.enable && musicTracks.length > 0 && (
+	    <MusicPlayer
+	            client:load
+	            tracks={musicTracks}
+	            autoplay={siteConfig.music.autoplay}
+	            initialVolume={siteConfig.music.volume}
+	    />
+	)}
+	<div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
     <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
         <Navbar></Navbar>
     </div>

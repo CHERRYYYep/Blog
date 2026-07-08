@@ -20,8 +20,10 @@ export const siteConfig: SiteConfig = {
 		src: [
 			"assets/images/a.png",
 			"assets/images/raze.png",
+			"assets/images/c.png",
+			"assets/images/老沙.jpg",
 		], // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
+		position: "center", // Supports 'top', 'center', 'bottom', 'full'. 'full' shows the whole image without cropping.
 		credit: {
 			enable: false, // Display the credit text of the banner image 图片标签
 			text: "", // Credit text to be displayed
@@ -31,6 +33,29 @@ export const siteConfig: SiteConfig = {
 	toc: {
 		enable: true, // Display the table of contents on the right side of the post
 		depth: 2, // Maximum heading depth to show in the table, from 1 to 3
+	},
+	post: {
+		glassmorphism: true, // Add a blurred translucent background to the post content card.
+	},
+	music: {
+		enable: true,
+		autoplay: false,
+		volume: 0.6,
+		// Use a direct audio URL, e.g. "https://example.com/song.mp3",
+		// or a local public file path, e.g. "/music/song.mp3".
+		// NetEase song page links like "https://music.163.com/song?id=..." are converted automatically.
+		src: [],
+		tracks: [
+			// You can also use a playlist:
+			// "/music/example.mp3",
+			"https://music.163.com/song?id=3389879577",
+			{
+				title: "DAY1",
+				artist: "艾志恒Asen",
+				src: "https://music.163.com/#/song?id=1492864083",
+			},
+			"https://music.163.com/song?id=3401160431",
+		],
 	},
 	favicon: [
 		// Leave this array empty to use the default favicon
