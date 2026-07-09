@@ -23,7 +23,7 @@ export const siteConfig: SiteConfig = {
 			"assets/images/c.png",
 			"assets/images/老沙.jpg",
 		], // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-		position: "center", // Supports 'top', 'center', 'bottom', 'full'. 'full' shows the whole image without cropping.
+		position: "full", // Supports 'top', 'center', 'bottom', 'full'. 'full' shows the whole image without cropping.
 		credit: {
 			enable: false, // Display the credit text of the banner image 图片标签
 			text: "", // Credit text to be displayed

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { onMount } from "svelte";
-
+import { siteConfig } from "../config";
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
 import { getPostUrlBySlug } from "../utils/url-utils";
@@ -85,7 +85,7 @@ onMount(async () => {
 });
 </script>
 
-<div class="card-base px-8 py-6">
+<div class:post-glass-card={siteConfig.post?.glassmorphism} class="card-base px-8 py-6">
     {#each groups as group}
         <div>
             <div class="flex flex-row w-full items-center h-[3.75rem]">
